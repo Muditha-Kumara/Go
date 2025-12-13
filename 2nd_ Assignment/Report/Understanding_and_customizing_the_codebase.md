@@ -64,13 +64,10 @@ type Data struct {
 }
 ```
 
-**Modification Example:**  
-Suppose we add a new field `Location string` and remove `Description`.
+**Testing Modification:**  
+Suppose I add a new field `Location string` and remove `Description`.
 
-**Why:**  
-- `Location` is needed for new project requirements.
-- `Description` is no longer relevant.
-
+![alt text](image-2.png)
 ---
 
 ## 3. Updating the Database Table
@@ -78,7 +75,7 @@ Suppose we add a new field `Location string` and remove `Description`.
 - The SQLite table schema was updated to match the new Data entity.
 - The `production.db` file was deleted to allow the application to auto-generate a new schema on startup.
 
-**SQL Table Change Example:**
+**SQL Table Changed:**
 ```sql
 CREATE TABLE IF NOT EXISTS data (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -91,12 +88,16 @@ CREATE TABLE IF NOT EXISTS data (
 );
 ```
 
+![alt text](image-3.png)
+
 ---
 
 ## 4. Customizing Handlers
 
 - All handlers in `internal/api/handlers/data/` were updated to parse and return the new Data structure.
 - Request and response payloads were adjusted to include/exclude the modified fields.
+
+![alt text](image-2.png)
 
 ---
 
@@ -107,28 +108,16 @@ CREATE TABLE IF NOT EXISTS data (
 
 ---
 
+![alt text](image-4.png)
+
 
 
 ## 6. Authentication Update
 
 - The authentication method uses a static username and password, which are set in the authentication middleware (`internal/api/middleware/basic_authentication.go`).
 - The username and password were changed from the default values to new credentials as required by the assignment.
-- All API requests must include the correct HTTP Basic Auth credentials (e.g., `-u newuser:newpassword` with curl).
-
-**Example Go Middleware:**
-
-```go
-func validateUser(username, password string) bool {
-    // Replace with your chosen credentials
-    return username == "newuser" && password == "newpassword"
-}
 
 ![alt text](image.png)
-```
-
-**Why this method?**
-- This approach is simple and meets the assignment requirements for changing credentials in the middleware.
-- For production, consider stronger authentication methods, but for this assignment, static username/password is sufficient.
 
 ---
 
@@ -138,15 +127,7 @@ func validateUser(username, password string) bool {
 - Tests were run using `go test` to ensure correctness.
 - The API was tested with the new entity and credentials using Thunder Client/Postman.
 
----
-
-## 8. Screenshots
-
-*Include screenshots of:*
-- Code changes (Data struct, handler, service, repository, middleware)
-- Database schema update
-- Test results
-- API requests/responses with new entity and credentials
+![alt text](image-1.png)
 
 ---
 
@@ -161,5 +142,4 @@ All assignment requirements were met:
 
 ---
 
----
 
