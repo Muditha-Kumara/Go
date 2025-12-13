@@ -1,11 +1,9 @@
 
-<div align="center">
-	<h1>Go Backend Assignments</h1>
-  
-	<img src="https://img.shields.io/badge/Go-1.21-blue?logo=go" alt="Go version">
-	<img src="https://img.shields.io/badge/University-IT00AK64--3007%20Intelligent%20Devices-blueviolet">
-	<img src="https://img.shields.io/badge/Status-Active-brightgreen">
-</div>
+# Go Backend Assignments
+
+![Go version](https://img.shields.io/badge/Go-1.21-blue?logo=go)
+![University](https://img.shields.io/badge/University-IT00AK64--3007%20Intelligent%20Devices-blueviolet)
+![Status](https://img.shields.io/badge/Status-Active-brightgreen)
 
 ---
 
