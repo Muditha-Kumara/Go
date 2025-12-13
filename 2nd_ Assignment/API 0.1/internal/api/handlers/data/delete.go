@@ -11,7 +11,7 @@ import (
 )
 
 // * The DELETE method removes a resource identified by a URI *
-// * curl -X DELETE http://127.0.0.1:8080/data/1 -i -u admin:password -H "Content-Type: application/json"
+// * curl -X DELETE http://127.0.0.1:8080/data/1 -i -u admin123:Testing@123 -H "Content-Type: application/json"
 func DeleteHandler(w http.ResponseWriter, r *http.Request, logger *log.Logger, ds service.DataService) {
 	id, err := strconv.Atoi(r.PathValue("id"))
 	if err != nil {

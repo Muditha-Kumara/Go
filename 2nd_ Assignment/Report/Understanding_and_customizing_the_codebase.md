@@ -108,31 +108,27 @@ CREATE TABLE IF NOT EXISTS data (
 ---
 
 
+
 ## 6. Authentication Update
 
-- The authentication method was improved from static username/password to API token authentication for better security and simplicity.
-- A strong random token is generated and stored on the server.
-- Clients (IoT devices) must send the token in the `Authorization: Bearer <token>` header.
-- The middleware checks for the correct token before allowing access.
+- The authentication method uses a static username and password, which are set in the authentication middleware (`internal/api/middleware/basic_authentication.go`).
+- The username and password were changed from the default values to new credentials as required by the assignment.
+- All API requests must include the correct HTTP Basic Auth credentials (e.g., `-u newuser:newpassword` with curl).
 
 **Example Go Middleware:**
 
 ```go
-func TokenAuthMiddleware(next http.Handler) http.Handler {
-    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        token := r.Header.Get("Authorization")
-        if token != "Bearer your-secret-token" {
-            http.Error(w, "Unauthorized", http.StatusUnauthorized)
-            return
-        }
-        next.ServeHTTP(w, r)
-    })
+func validateUser(username, password string) bool {
+    // Replace with your chosen credentials
+    return username == "newuser" && password == "newpassword"
 }
+
+![alt text](image.png)
 ```
 
 **Why this method?**
-- API tokens are more secure than static passwords, easy to implement, and suitable for IoT APIs in student or prototype projects.
-- For production, consider mTLS or device certificates, but for this assignment, API tokens provide a good balance of security and ease of use.
+- This approach is simple and meets the assignment requirements for changing credentials in the middleware.
+- For production, consider stronger authentication methods, but for this assignment, static username/password is sufficient.
 
 ---
 

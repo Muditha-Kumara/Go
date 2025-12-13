@@ -11,7 +11,7 @@ import (
 )
 
 // * The GET method retrieves all resources identified by a URI *
-// * curl -X GET http://127.0.0.1:8080/data -i -u admin:password -H "Content-Type: application/json"
+// * curl -X GET http://127.0.0.1:8080/data -i -u admin123:Testing@123 -H "Content-Type: application/json"
 func GetHandler(w http.ResponseWriter, r *http.Request, logger *log.Logger, ds service.DataService) {
 	page, err := strconv.Atoi(r.URL.Query().Get("page"))
 	if err != nil {
