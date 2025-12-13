@@ -9,7 +9,7 @@ type Data struct {
 	Value       float64 `json:"value"`
 	Type        string  `json:"type"`
 	DateTime    string  `json:"date_time"`
-	Description string  `json:"description"`
+	Location    string  `json:"location"`
 }
 
 type DataRepository interface {

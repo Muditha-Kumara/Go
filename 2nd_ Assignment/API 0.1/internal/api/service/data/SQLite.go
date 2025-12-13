@@ -67,8 +67,8 @@ func (ds *DataServiceSQLite) ValidateData(data *models.Data) error {
 	if len(data.Type) > 20 {
 		errMsg += "Type must be less than 20 characters. "
 	}
-	if len(data.Description) > 100 {
-		errMsg += "Description must be less than 100 characters. "
+	   if len(data.Location) > 100 {
+		   errMsg += "Location must be less than 100 characters. "
 	}
 	_, err := time.Parse("2006-01-02T15:04:05Z", data.DateTime)
 	if err != nil {

@@ -41,15 +41,15 @@ func TestPostErrorCreatingData(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	dataJSON, _ := json.Marshal(models.Data{
-		ID:          1,
-		DeviceID:    "device1",
-		DeviceName:  "device1",
-		Value:       1.0,
-		Type:        "type1",
-		DateTime:    "2021-01-01 00:00:00",
-		Description: "description1",
-	})
+       dataJSON, _ := json.Marshal(models.Data{
+	       ID:          1,
+	       DeviceID:    "device1",
+	       DeviceName:  "device1",
+	       Value:       1.0,
+	       Type:        "type1",
+	       DateTime:    "2021-01-01 00:00:00",
+	       Location:    "location1",
+       })
 
 	req.Body = io.NopCloser(strings.NewReader(string(dataJSON)))
 	rr := httptest.NewRecorder()
@@ -73,15 +73,15 @@ func TestPostSuccessful(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	dataJSON, _ := json.Marshal(models.Data{
-		ID:          1,
-		DeviceID:    "device1",
-		DeviceName:  "device1",
-		Value:       1.0,
-		Type:        "type1",
-		DateTime:    "2021-01-01 00:00:00",
-		Description: "description1",
-	})
+       dataJSON, _ := json.Marshal(models.Data{
+	       ID:          1,
+	       DeviceID:    "device1",
+	       DeviceName:  "device1",
+	       Value:       1.0,
+	       Type:        "type1",
+	       DateTime:    "2021-01-01 00:00:00",
+	       Location:    "location1",
+       })
 
 	// * Create new reader with the JSON payload
 	req.Body = io.NopCloser(strings.NewReader(string(dataJSON)))
@@ -96,7 +96,7 @@ func TestPostSuccessful(t *testing.T) {
 	}
 
 	// * Check the response body
-	expected := `{"id":1,"device_id":"device1","device_name":"device1","value":1,"type":"type1","date_time":"2021-01-01 00:00:00","description":"description1"}`
+	expected := `{"id":1,"device_id":"device1","device_name":"device1","value":1,"type":"type1","date_time":"2021-01-01 00:00:00","location":"location1"}`
 	if strings.TrimSpace(rr.Body.String()) != expected {
 		t.Errorf("handler returned unexpected body: got %v want %v", rr.Body.String(), expected)
 	}

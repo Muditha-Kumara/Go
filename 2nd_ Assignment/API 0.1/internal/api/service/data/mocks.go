@@ -17,7 +17,7 @@ func (m *MockDataServiceSuccessful) ReadMany(page int, rowsPerPage int, ctx cont
 			Value:       1.0,
 			Type:        "type1",
 			DateTime:    "2021-01-01 00:00:00",
-			Description: "description1",
+			   Location:    "location",
 		},
 		{
 			ID:          2,
@@ -26,7 +26,7 @@ func (m *MockDataServiceSuccessful) ReadMany(page int, rowsPerPage int, ctx cont
 			Value:       2.0,
 			Type:        "type2",
 			DateTime:    "2021-01-01 00:00:00",
-			Description: "description2",
+			   Location:    "location",
 		},
 	}, nil
 }
@@ -39,7 +39,7 @@ func (m *MockDataServiceSuccessful) ReadOne(id int, ctx context.Context) (*model
 		Value:       1.0,
 		Type:        "type1",
 		DateTime:    "2021-01-01 00:00:00",
-		Description: "description1",
+			   Location:    "location",
 	}, nil
 }
 
