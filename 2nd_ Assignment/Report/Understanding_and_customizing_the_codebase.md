@@ -10,8 +10,8 @@
 |---------------------|--------------------------------------------------------------|
 | **Operating System**| Linux                                                        |
 | **Programming Lang**| Go                                                           |
-| **Git Repo**        | [https://github.com/Muditha-Kumara/Go/tree/main](https://github.com/Muditha-Kumara/Go/tree/main) |
-| **Commit**          | `xxxxxx`                                                    |
+| **Git Repo**        | [https://github.com/Muditha-Kumara/Go/tree/task2](https://github.com/Muditha-Kumara/Go/tree/task2) |
+| **Commit**          | `b8eb45c`                                                    |
 
 **Project Structure:**
 
