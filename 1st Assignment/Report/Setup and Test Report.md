@@ -1,62 +1,87 @@
-# Assignment 1: Setup and Test Report
 
-## 1. Introduction
+---
 
-This report documents the setup process and testing results for Assignment 1. The goal is to ensure the environment is correctly configured and the API is functioning as expected.
+# 🎯 Assignment 1: Setup and Test Report
 
-## 2. Environment Setup
+---
 
-- **Operating System:** Linux
-- **Programming Language:** Go
-- **Project Structure:**
-	- `API 0.1/`
-	- `cmd/api/main.go`
-	- `internal/api/handlers/`
-	- `internal/api/middleware/`
-	- `internal/api/repository/`
-	- `internal/api/server/`
-	- `internal/api/service/`
 
-### Steps:
+## 📝 Introduction
+
+This report documents the setup process and testing results for **Assignment 1** of the Intelligent Devices course. The goal is to ensure the environment is correctly configured and the API is functioning as expected.
+
+
+## ⚙️ Environment Setup
+
+| Item                | Details                                                      |
+|---------------------|--------------------------------------------------------------|
+| **Operating System**| Linux                                                        |
+| **Programming Lang**| Go                                                           |
+| **Git Repo**        | [https://github.com/Muditha-Kumara/Go/tree/main](https://github.com/Muditha-Kumara/Go/tree/main) |
+| **Commit**          | `bf39632`                                                    |
+
+**Project Structure:**
+
+```
+API 0.1/
+  cmd/api/main.go
+  internal/api/handlers/
+  internal/api/middleware/
+  internal/api/repository/
+  internal/api/server/
+  internal/api/service/
+```
+
+---
+
+### 🛠️ Setup Steps
 
 1. Cloned the repository from the provided source.
 2. Installed Go, mingw32-base, mingw32-gcc-g++ packages and verified the version.
 3. Navigated to the project directory and ran `go mod tidy` to install dependencies.
 
-![alt text](image.png)
 
-## 3. Running the API
+![Setup Screenshot](image.png)
 
-- Navigated to `API 0.1/cmd/api/`.
-- Ran the API server using:
 
-	```bash
-	go run main.go
-	```
+## 🚀 Running the API
 
-- Confirmed the server started successfully and was accessible at the expected endpoint.
+1. Navigated to `API 0.1/cmd/api/`.
+2. Ran the API server using:
 
-![alt text](image-3.png)
+   ```bash
+   go run main.go
+   ```
 
-## 4. Testing
+3. Confirmed the server started successfully and was accessible at the expected endpoint.
 
-- API Test with Thunder Client
 
-![alt text](image-4.png)
+![API Running Screenshot](image-3.png)
 
-![alt text](image-5.png)
 
-![alt text](image-6.png)
+## 🧪 Testing
 
-![alt text](image-7.png)
+API tested using Thunder Client:
 
-![alt text](image-8.png)
+![Thunder Client Test 1](image-4.png)
 
-## 5. Issues Encountered
+![Thunder Client Test 2](image-5.png)
+
+![Thunder Client Test 3](image-6.png)
+
+![Thunder Client Test 4](image-7.png)
+
+![Thunder Client Test 5](image-8.png)
+
+
+## ⚠️ Issues Encountered
 
 - No major issues encountered during setup or testing.
 
-## 6. Conclusion
+
+## ✅ Conclusion
 
 The environment was set up successfully, and all tests passed. The API is ready for further development and integration.
+
+---
 
