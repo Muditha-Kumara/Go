@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"goapi/internal/api/handlers/data"
+	"goapi/internal/api/handlers/setting"
 	"goapi/internal/api/middleware"
 	"goapi/internal/api/service"
 	"log"
@@ -49,6 +50,10 @@ func (api *Server) ListenAndServe(addr string) error {
 
 // * REST API handlers
 func setupDataHandlers(mux *http.ServeMux, sf *service.ServiceFactory, logger *log.Logger) error {
+       // Register GET /setting endpoint
+       mux.HandleFunc("GET /setting", func(w http.ResponseWriter, r *http.Request) {
+	       setting.GetSetting(w, r)
+       })
        ds, err := sf.CreateDataService(service.SQLiteDataService)
        if err != nil {
 	       return err
