@@ -36,6 +36,15 @@ This repository contains my university assignments for the course <b>IT00AK64-30
 	</ul>
 </details>
 
+<details>
+	<summary><b>Task 3: Customizing the Go API Codebase to Our Application</b></summary>
+	<ul>
+		<li><a href="./2nd_%20Assignment/Report/Understanding_and_customizing_the_codebase.md">Understanding and Customizing the Codebase</a></li>
+	</ul>
+</details>
+
+https://github.com/Muditha-Kumara/Go/tree/task3
+
 ---
 
 ## 🚀 Quick Start
