@@ -1,0 +1,61 @@
+Your answer
+
+NOT SUBMITTED
+
+Assignment
+Assignment: Customizing and Extending the Go Backend for Intelligent Devices
+Objective: This assignment challenges you to adapt the Go backend codebase for your
+intelligent devices project. By implementing and customizing data entities, handlers,
+validators, and database tables, you’ll create a backend that fits your specific project
+requirements. This hands-on task will reinforce your skills in backend development and
+data handling.
+Instructions:
+1. If needed: Familiarize Yourself with the Codebase
+Review the provided Go backend codebase and understand the
+key components, including routes, handlers, validators, and
+database schemas.
+Identify areas where customizations will be needed to align the
+backend with your project’s intelligent device requirements.
+2. Define Your Device Data Entity
+Based on the data your device collects or interacts with, design a
+custom data entity. This should include attributes specific to your
+device’s functionality (e.g., temperature, humidity, or sensor status
+for a smart thermostat).
+3. Implement Custom Data Entity and Handlers
+Extend/Update the codebase by adding your custom data entity to
+the project, including the necessary database table(s) and struct(s).
+Write/Modify handlers for CRUD (Create, Read, Update, Delete)
+operations for this entity, adapting any sample handlers provided
+as necessary.
+Ensure each handler follows RESTful conventions and handles any
+edge cases (e.g., missing or incorrect data).
+4. Set Up and Customize Validators
+Implement custom validators for your entity to ensure data
+integrity (e.g., range checks, required fields).
+Integrate these validators into your CRUD handlers so that
+validation occurs before database operations.
+5. Integrate Your Device with the Backend
+
+Connect your intelligent device(s) to the backend API. Your device
+should send data to and retrieve data from the backend as
+required by your project.
+6. Advanced: Add Intelligence (Optional)
+If your device performs intelligent functions (e.g., predictive
+analysis, automation), add backend support for these functions.
+7. Testing and Debugging
+Rigorously test your customized backend and its integration with
+the device.
+8. Documentation and Reflection
+Document your customization steps, including code explanations
+and a brief overview of how each part works with your device.
+Write a reflection on your experience, discussing the challenges
+you faced, the skills you gained, and any ideas for future
+improvements.
+Deliverables:
+The Customized Go Codebase: Submit your customized codebase
+Documentation: Provide a document with details on your design and any
+unique features you implemented.
+Reflection: Include a short reflection on the assignment, discussing what you
+learned and any challenges you overcame.
+
+

@@ -36,6 +36,13 @@ This repository contains my university assignments for the course <b>IT00AK64-30
 	</ul>
 </details>
 
+<details>
+	<summary><b>Task 3: Customizing the Go API Codebase to Our Application</b></summary>
+	<ul>
+		<li><a href="https://github.com/Muditha-Kumara/Go/blob/task3/3rd_%20Assignment/Report/Customizing%20and%20extending%20the%20API%20for%20your%20Intelligent%20Devices%20-project.md">Customizing the Go API Codebase to Our Application</a></li>
+	</ul>
+</details>
+
 ---
 
 ## 🚀 Quick Start
