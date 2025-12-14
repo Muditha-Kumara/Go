@@ -12,6 +12,7 @@ type DataService interface {
 	Update(data *models.Data, ctx context.Context) (int64, error)
 	Delete(deviceID string, vehicalID string, ctx context.Context) (int64, error)
 	ValidateData(data *models.Data) error
+	GetLatestByDeviceID(deviceID string, ctx context.Context) (*models.Data, error)
 }
 
 type DataError struct {

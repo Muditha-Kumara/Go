@@ -6,6 +6,11 @@ import (
 	"time"
 )
 
+// GetLatestByDeviceID returns the most recent data record for a given device_id
+func (ds *DataServiceSQLite) GetLatestByDeviceID(deviceID string, ctx context.Context) (*models.Data, error) {
+ return ds.repo.GetLatestByDeviceID(deviceID, ctx)
+}
+
 // * Implementation of DataService for SQLite database *
 type DataServiceSQLite struct {
 	repo models.DataRepository

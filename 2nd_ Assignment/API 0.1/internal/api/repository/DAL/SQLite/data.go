@@ -9,13 +9,27 @@ import (
 
 type DataRepository struct {
 	sqlDB *sql.DB
-	createStmt,
-	readByVehicalStmt,
-	readStmt,
-	readManyStmt,
-	updateStmt,
-	deleteStmt *sql.Stmt
-	ctx context.Context
+	createStmt      *sql.Stmt
+	readByVehicalStmt *sql.Stmt
+	readStmt        *sql.Stmt
+	readManyStmt    *sql.Stmt
+	updateStmt      *sql.Stmt
+	deleteStmt      *sql.Stmt
+	ctx             context.Context
+}
+
+// GetLatestByDeviceID returns the most recent data record for a given device_id
+func (r *DataRepository) GetLatestByDeviceID(deviceID string, ctx context.Context) (*models.Data, error) {
+	row := r.sqlDB.QueryRowContext(ctx, `SELECT device_id, vehical_id, data, alert_type, date_time, location FROM data WHERE device_id = ? ORDER BY date_time DESC LIMIT 1`, deviceID)
+	var d models.Data
+	err := row.Scan(&d.DeviceID, &d.VehicalID, &d.Data, &d.AlertType, &d.DateTime, &d.Location)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &d, nil
 }
 
 func NewDataRepository(sqlDB DAL.SQLDatabase, ctx context.Context) (models.DataRepository, error) {

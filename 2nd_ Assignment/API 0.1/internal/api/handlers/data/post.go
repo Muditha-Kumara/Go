@@ -15,10 +15,8 @@ import (
 func PostHandler(w http.ResponseWriter, r *http.Request, logger *log.Logger, ds service.DataService) {
 	var data models.Data
 
-	// * Decode the JSON payload from the request body into the data struct
+	// Decode the JSON payload from the request body into the data struct
 	if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
-
-		// * This is a User Error: format of body is invalid, response in JSON and with a 400 status code
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(`{"error": "Invalid request data. Please check your input."}`))
 		return
@@ -27,27 +25,37 @@ func PostHandler(w http.ResponseWriter, r *http.Request, logger *log.Logger, ds 
 	ctx, cancel := context.WithTimeout(r.Context(), 2*time.Second)
 	defer cancel()
 
-	// * Try to create the data in the database
+	// Get the latest record for the same device_id
+	var lastData *models.Data
+	lastData, err := ds.GetLatestByDeviceID(data.DeviceID, ctx)
+	result := "ok"
+	if err == nil && lastData != nil {
+		// Parse date_time fields
+		newTime, err1 := time.Parse(time.RFC3339, data.DateTime)
+		lastTime, err2 := time.Parse(time.RFC3339, lastData.DateTime)
+		if err1 == nil && err2 == nil {
+			if newTime.Sub(lastTime) <= time.Minute && newTime.Sub(lastTime) >= 0 {
+				result = "wrong"
+			}
+		}
+	}
+
+	// Always insert the new data
 	if err := ds.Create(&data, ctx); err != nil {
 		switch err.(type) {
 		case service.DataError:
-			// * If the error is a DataError, handle it as a client error
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte(`{"error": "` + err.Error() + `"}`))
 			return
 		default:
-			// * If it is not a DataError, handle it as a server error
 			logger.Println("Error creating data:", err, data)
 			http.Error(w, "Internal server error.", http.StatusInternalServerError)
 			return
 		}
 	}
 
-	// * Return the data to the user as JSON with a 201 Created status code
+	// Respond with result (ok or wrong)
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	if err := json.NewEncoder(w).Encode(data); err != nil {
-		logger.Println("Error encoding data:", err, data)
-		http.Error(w, "Internal server error.", http.StatusInternalServerError)
-		return
-	}
+	json.NewEncoder(w).Encode(map[string]string{"result": result})
 }

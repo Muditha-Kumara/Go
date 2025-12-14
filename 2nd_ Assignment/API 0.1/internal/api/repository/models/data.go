@@ -18,4 +18,5 @@ type DataRepository interface {
 	ReadByVehicalID(vehicalID string, ctx context.Context) ([]*Data, error)
 	Update(data *Data, ctx context.Context) (int64, error)
 	Delete(data *Data, ctx context.Context) (int64, error)
+	GetLatestByDeviceID(deviceID string, ctx context.Context) (*Data, error)
 }
