@@ -11,7 +11,7 @@ import (
 )
 
 // * User sends a POST request to /data with a JSON payload in the request body *
-// * curl -X POST http://127.0.0.1:8080/data -i -u admin123:Testing@123 -H "Content-Type: application/json" -d '{"device_id": "device1", "device_name": "device1", "value": 1.0, "type": "type1", "date_time": "2021-01-01T00:00:00Z", "location": "location1"}'
+// * curl -X POST http://127.0.0.1:8080/data -i -u admin123:Testing@123 -H "Content-Type: application/json" -d '{"device_id": "dev1", "vehical_id": "veh1", "data": "some data", "alert_type": "warning", "date_time": "2025-12-14T12:00:00Z", "location": "lab"}'
 func PostHandler(w http.ResponseWriter, r *http.Request, logger *log.Logger, ds service.DataService) {
 	var data models.Data
 

@@ -2,7 +2,7 @@
 ---
 
 
-# 🎯 Assignment 2: Customizing the Go API Codebase
+# 🎯 Assignment 3: Customizing the Go API Codebase to Our Application
 
 ## ⚙️ Environment Setup
 

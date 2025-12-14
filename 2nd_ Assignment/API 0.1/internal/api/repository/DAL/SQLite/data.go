@@ -10,6 +10,7 @@ import (
 type DataRepository struct {
 	sqlDB *sql.DB
 	createStmt,
+	readByVehicalStmt,
 	readStmt,
 	readManyStmt,
 	updateStmt,
@@ -24,55 +25,62 @@ func NewDataRepository(sqlDB DAL.SQLDatabase, ctx context.Context) (models.DataR
 		ctx:   ctx,
 	}
 
-	// Create the data table if it doesn't exist
-	if _, err := repo.sqlDB.Exec(`CREATE TABLE  IF NOT EXISTS data (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		device_id VARCHAR(50) NOT NULL,
-		device_name VARCHAR(50),
-		value FLOAT,
-		data_type VARCHAR(20),
-		date_time TIMESTAMP,
-		location VARCHAR(100)
-	);`); err != nil {
-		repo.sqlDB.Close()
-		return nil, err
-	}
+	   // Create the data table if it doesn't exist
+	   if _, err := repo.sqlDB.Exec(`CREATE TABLE  IF NOT EXISTS data (
+		   device_id VARCHAR(50) NOT NULL,
+		   vehical_id VARCHAR(50),
+		   data TEXT,
+		   alert_type VARCHAR(50),
+		   date_time TIMESTAMP,
+		   location VARCHAR(100)
+	   );`); err != nil {
+		   repo.sqlDB.Close()
+		   return nil, err
+	   }
 
 	// * Create needed Prepared SQL statements, this is more efficient than running each query individually
-	createStmt, err := repo.sqlDB.Prepare(`INSERT INTO data (device_id, device_name, value, data_type, date_time, location) VALUES (?, ?, ?, ?, ?, ?)`)
+		createStmt, err := repo.sqlDB.Prepare(`INSERT INTO data (device_id, vehical_id, data, alert_type, date_time, location) VALUES (?, ?, ?, ?, ?, ?)`)
 	if err != nil {
 		repo.sqlDB.Close() // Close the database connection if statement preparation fails
 		return nil, err
 	}
 	repo.createStmt = createStmt
 
-	readStmt, err := repo.sqlDB.Prepare("SELECT id, device_id, device_name, value, data_type, date_time, location FROM data WHERE id = ?")
+		readStmt, err := repo.sqlDB.Prepare("SELECT device_id, vehical_id, data, alert_type, date_time, location FROM data WHERE device_id = ?")
 	if err != nil {
 		repo.sqlDB.Close()
 		return nil, err
 	}
 	repo.readStmt = readStmt
 
-	readManyStmt, err := repo.sqlDB.Prepare("SELECT id, device_id, device_name, value, data_type, date_time, location FROM data LIMIT ? OFFSET ?")
+		readManyStmt, err := repo.sqlDB.Prepare("SELECT device_id, vehical_id, data, alert_type, date_time, location FROM data LIMIT ? OFFSET ?")
 	if err != nil {
 		repo.sqlDB.Close()
 		return nil, err
 	}
 	repo.readManyStmt = readManyStmt
 
-	updateStmt, err := repo.sqlDB.Prepare("UPDATE data SET device_id = ?, device_name = ?, value = ?, data_type = ?, date_time = ?, location = ? WHERE id = ?")
+		updateStmt, err := repo.sqlDB.Prepare("UPDATE data SET vehical_id = ?, data = ?, alert_type = ?, date_time = ?, location = ? WHERE device_id = ?")
 	if err != nil {
 		repo.sqlDB.Close()
 		return nil, err
 	}
 	repo.updateStmt = updateStmt
 
-	deleteStmt, err := repo.sqlDB.Prepare("DELETE FROM data WHERE id = ?")
+		deleteStmt, err := repo.sqlDB.Prepare("DELETE FROM data WHERE device_id = ?")
 	if err != nil {
 		repo.sqlDB.Close()
 		return nil, err
 	}
 	repo.deleteStmt = deleteStmt
+
+		// prepare statement to read by vehical_id
+		readByVehicalStmt, err := repo.sqlDB.Prepare("SELECT device_id, vehical_id, data, alert_type, date_time, location FROM data WHERE vehical_id = ?")
+		if err != nil {
+			repo.sqlDB.Close()
+			return nil, err
+		}
+		repo.readByVehicalStmt = readByVehicalStmt
 
 	go Close(ctx, repo)
 
@@ -84,6 +92,7 @@ func Close(ctx context.Context, r *DataRepository) {
 	<-ctx.Done()
 	r.createStmt.Close()
 	r.readStmt.Close()
+	r.readByVehicalStmt.Close()
 	r.updateStmt.Close()
 	r.deleteStmt.Close()
 	r.readManyStmt.Close()
@@ -92,29 +101,40 @@ func Close(ctx context.Context, r *DataRepository) {
 
 func (r *DataRepository) Create(data *models.Data, ctx context.Context) error {
 
-	res, err := r.createStmt.ExecContext(ctx, data.DeviceID, data.DeviceName, data.Value, data.Type, data.DateTime, data.Location)
-	if err != nil {
-		return err
-	}
-	id, err := res.LastInsertId()
-	if err != nil {
-		return err
-	}
-	data.ID = int(id)
-	return nil
+	_, err := r.createStmt.ExecContext(ctx, data.DeviceID, data.VehicalID, data.Data, data.AlertType, data.DateTime, data.Location)
+	return err
 }
 
 func (r *DataRepository) ReadOne(id int, ctx context.Context) (*models.Data, error) {
-	row := r.readStmt.QueryRowContext(ctx, id)
-	var data models.Data
-	err := row.Scan(&data.ID, &data.DeviceID, &data.DeviceName, &data.Value, &data.Type, &data.DateTime, &data.Location)
+	   row := r.readStmt.QueryRowContext(ctx, id)
+	   var data models.Data
+	   err := row.Scan(&data.DeviceID, &data.VehicalID, &data.Data, &data.AlertType, &data.DateTime, &data.Location)
+	   if err != nil {
+		   if err == sql.ErrNoRows {
+			   return nil, nil
+		   }
+		   return nil, err
+	   }
+	   return &data, nil
+}
+
+func (r *DataRepository) ReadByVehicalID(vehicalID string, ctx context.Context) ([]*models.Data, error) {
+	rows, err := r.readByVehicalStmt.QueryContext(ctx, vehicalID)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, nil
-		}
 		return nil, err
 	}
-	return &data, nil
+	defer rows.Close()
+
+	var data []*models.Data
+	for rows.Next() {
+		var d models.Data
+		err := rows.Scan(&d.DeviceID, &d.VehicalID, &d.Data, &d.AlertType, &d.DateTime, &d.Location)
+		if err != nil {
+			return nil, err
+		}
+		data = append(data, &d)
+	}
+	return data, nil
 }
 
 func (r *DataRepository) ReadMany(page int, rowsPerPage int, ctx context.Context) ([]*models.Data, error) {
@@ -131,38 +151,38 @@ func (r *DataRepository) ReadMany(page int, rowsPerPage int, ctx context.Context
 	defer rows.Close()
 
 	var data []*models.Data
-	for rows.Next() {
-		var d models.Data
-		err := rows.Scan(&d.ID, &d.DeviceID, &d.DeviceName, &d.Value, &d.Type, &d.DateTime, &d.Location)
-		if err != nil {
-			return nil, err
-		}
-		data = append(data, &d)
-	}
+	   for rows.Next() {
+		   var d models.Data
+		   err := rows.Scan(&d.DeviceID, &d.VehicalID, &d.Data, &d.AlertType, &d.DateTime, &d.Location)
+		   if err != nil {
+			   return nil, err
+		   }
+		   data = append(data, &d)
+	   }
 	return data, nil
 }
 
 func (r *DataRepository) ReadAll() ([]*models.Data, error) {
-	rows, err := r.sqlDB.QueryContext(context.Background(), "SELECT id, device_id, device_name, value, data_type, date_time, location FROM data")
+		rows, err := r.sqlDB.QueryContext(context.Background(), "SELECT device_id, vehical_id, data, alert_type, date_time, location FROM data")
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
 	var data []*models.Data
-	for rows.Next() {
-		var d models.Data
-		err := rows.Scan(&d.ID, &d.DeviceID, &d.DeviceName, &d.Value, &d.Type, &d.DateTime, &d.Location)
-		if err != nil {
-			return nil, err
-		}
-		data = append(data, &d)
-	}
+	   for rows.Next() {
+		   var d models.Data
+		   err := rows.Scan(&d.DeviceID, &d.VehicalID, &d.Data, &d.AlertType, &d.DateTime, &d.Location)
+		   if err != nil {
+			   return nil, err
+		   }
+		   data = append(data, &d)
+	   }
 	return data, nil
 }
 
 func (r *DataRepository) Update(data *models.Data, ctx context.Context) (int64, error) {
-	res, err := r.updateStmt.ExecContext(ctx, data.DeviceID, data.DeviceName, data.Value, data.Type, data.DateTime, data.Location, data.ID)
+		res, err := r.updateStmt.ExecContext(ctx, data.VehicalID, data.Data, data.AlertType, data.DateTime, data.Location, data.DeviceID)
 	if err != nil {
 		return 0, err
 	}
@@ -174,7 +194,7 @@ func (r *DataRepository) Update(data *models.Data, ctx context.Context) (int64, 
 }
 
 func (r *DataRepository) Delete(data *models.Data, ctx context.Context) (int64, error) {
-	res, err := r.deleteStmt.ExecContext(ctx, data.ID)
+		res, err := r.deleteStmt.ExecContext(ctx, data.DeviceID)
 	if err != nil {
 		return 0, err
 	}

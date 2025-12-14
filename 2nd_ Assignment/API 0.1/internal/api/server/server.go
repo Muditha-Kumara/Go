@@ -49,11 +49,14 @@ func (api *Server) ListenAndServe(addr string) error {
 
 // * REST API handlers
 func setupDataHandlers(mux *http.ServeMux, sf *service.ServiceFactory, logger *log.Logger) error {
+       ds, err := sf.CreateDataService(service.SQLiteDataService)
+       if err != nil {
+	       return err
+       }
 
-	ds, err := sf.CreateDataService(service.SQLiteDataService)
-	if err != nil {
-		return err
-	}
+       mux.HandleFunc("GET /data/{vehical_id}", func(w http.ResponseWriter, r *http.Request) {
+	       data.GetByIDHandler(w, r, logger, ds)
+       })
 
 	mux.HandleFunc("OPTIONS /*", func(w http.ResponseWriter, r *http.Request) {
 		data.OptionsHandler(w, r)
@@ -67,10 +70,10 @@ func setupDataHandlers(mux *http.ServeMux, sf *service.ServiceFactory, logger *l
 	mux.HandleFunc("GET /data", func(w http.ResponseWriter, r *http.Request) {
 		data.GetHandler(w, r, logger, ds)
 	})
-	mux.HandleFunc("GET /data/{id}", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("GET /data/{device_id}/{vehical_id}", func(w http.ResponseWriter, r *http.Request) {
 		data.GetByIDHandler(w, r, logger, ds)
 	})
-	mux.HandleFunc("DELETE /data/{id}", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("DELETE /data/{device_id}/{vehical_id}", func(w http.ResponseWriter, r *http.Request) {
 		data.DeleteHandler(w, r, logger, ds)
 	})
 	return err

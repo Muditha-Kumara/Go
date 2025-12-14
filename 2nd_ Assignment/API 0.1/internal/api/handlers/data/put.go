@@ -11,7 +11,7 @@ import (
 )
 
 // * When using PUT, the client sends a complete representation of a resource to replace the current version: Whole Resource Replacement. *
-// * curl -X PUT http://127.0.0.1:8080/data -i -u admin123:Testing@123 -H "Content-Type: application/json" -d '{"id": 1, "content": "updated data"}'
+// * curl -X PUT http://127.0.0.1:8080/data -i -u admin123:Testing@123 -H "Content-Type: application/json" -d '{"device_id": "dev1", "vehical_id": "veh1", "data": "some data", "alert_type": "warning", "date_time": "2025-12-14T12:00:00Z", "location": "lab"}'
 func PutHandler(w http.ResponseWriter, r *http.Request, logger *log.Logger, ds service.DataService) {
 	var data models.Data
 

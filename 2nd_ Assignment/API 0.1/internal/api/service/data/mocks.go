@@ -7,40 +7,50 @@ import (
 
 // * Mock implementation of DataService for testing purposes, always returns a successful response and Data object(s) *
 type MockDataServiceSuccessful struct{}
-
-func (m *MockDataServiceSuccessful) ReadMany(page int, rowsPerPage int, ctx context.Context) ([]*models.Data, error) {
-	return []*models.Data{
-		{
-			ID:          1,
-			DeviceID:    "device1",
-			DeviceName:  "device1",
-			Value:       1.0,
-			Type:        "type1",
-			DateTime:    "2021-01-01 00:00:00",
-			Location:    "location",
-		},
-		{
-			ID:          2,
-			DeviceID:    "device2",
-			DeviceName:  "device2",
-			Value:       2.0,
-			Type:        "type2",
-			DateTime:    "2021-01-01 00:00:00",
-			Location:    "location",
-		},
-	}, nil
+// ReadByVehicalID returns mock data for a given vehicalID (simulate found data)
+func (m *MockDataServiceSuccessful) ReadByVehicalID(vehicalID string, ctx context.Context) ([]*models.Data, error) {
+       return []*models.Data{
+	       {
+		       DeviceID:   "device1",
+		       VehicalID:  vehicalID,
+		       Data:       "alert data 1",
+		       AlertType:  "type1",
+		       DateTime:   "2021-01-01T00:00:00Z",
+		       Location:   "location1",
+	       },
+       }, nil
 }
 
-func (m *MockDataServiceSuccessful) ReadOne(id int, ctx context.Context) (*models.Data, error) {
-	return &models.Data{
-		ID:          1,
-		DeviceID:    "device1",
-		DeviceName:  "device1",
-		Value:       1.0,
-		Type:        "type1",
-		DateTime:    "2021-01-01 00:00:00",
-		Location:    "location",
-	}, nil
+func (m *MockDataServiceSuccessful) ReadMany(page int, rowsPerPage int, ctx context.Context) ([]*models.Data, error) {
+       return []*models.Data{
+	       {
+		       DeviceID:   "device1",
+		       VehicalID:  "vehical1",
+		       Data:       "alert data 1",
+		       AlertType:  "type1",
+		       DateTime:   "2021-01-01T00:00:00Z",
+		       Location:   "location1",
+	       },
+	       {
+		       DeviceID:   "device2",
+		       VehicalID:  "vehical2",
+		       Data:       "alert data 2",
+		       AlertType:  "type2",
+		       DateTime:   "2021-01-01T00:00:00Z",
+		       Location:   "location2",
+	       },
+       }, nil
+}
+
+func (m *MockDataServiceSuccessful) ReadOne(deviceID string, vehicalID string, ctx context.Context) (*models.Data, error) {
+       return &models.Data{
+	       DeviceID:   deviceID,
+	       VehicalID:  vehicalID,
+	       Data:       "alert data",
+	       AlertType:  "type1",
+	       DateTime:   "2021-01-01T00:00:00Z",
+	       Location:   "location1",
+       }, nil
 }
 
 func (m *MockDataServiceSuccessful) Create(data *models.Data, ctx context.Context) error {
@@ -51,7 +61,7 @@ func (m *MockDataServiceSuccessful) Update(data *models.Data, ctx context.Contex
 	return 1, nil
 }
 
-func (m *MockDataServiceSuccessful) Delete(data *models.Data, ctx context.Context) (int64, error) {
+func (m *MockDataServiceSuccessful) Delete(deviceID string, vehicalID string, ctx context.Context) (int64, error) {
 	return 1, nil
 }
 
@@ -62,12 +72,16 @@ func (m *MockDataServiceSuccessful) ValidateData(data *models.Data) error {
 // * Mock implementation of DataService for testing purposes, always returns empty data *
 
 type MockDataServiceNotFound struct{}
+// ReadByVehicalID returns empty slice (simulate not found)
+func (m *MockDataServiceNotFound) ReadByVehicalID(vehicalID string, ctx context.Context) ([]*models.Data, error) {
+	return []*models.Data{}, nil
+}
 
 func (m *MockDataServiceNotFound) ReadMany(page int, rowsPerPage int, ctx context.Context) ([]*models.Data, error) {
 	return []*models.Data{}, nil
 }
 
-func (m *MockDataServiceNotFound) ReadOne(id int, ctx context.Context) (*models.Data, error) {
+func (m *MockDataServiceNotFound) ReadOne(deviceID string, vehicalID string, ctx context.Context) (*models.Data, error) {
 	return nil, nil
 }
 
@@ -79,7 +93,7 @@ func (m *MockDataServiceNotFound) Update(data *models.Data, ctx context.Context)
 	return 0, nil
 }
 
-func (m *MockDataServiceNotFound) Delete(data *models.Data, ctx context.Context) (int64, error) {
+func (m *MockDataServiceNotFound) Delete(deviceID string, vehicalID string, ctx context.Context) (int64, error) {
 	return 0, nil
 }
 
@@ -89,12 +103,16 @@ func (m *MockDataServiceNotFound) ValidateData(data *models.Data) error {
 
 // * Mock implementation of DataService for testing purposes, always returns an error *
 type MockDataServiceError struct{}
+// ReadByVehicalID returns an error (simulate DB/service error)
+func (m *MockDataServiceError) ReadByVehicalID(vehicalID string, ctx context.Context) ([]*models.Data, error) {
+	return nil, DataError{Message: "Error reading data."}
+}
 
 func (m *MockDataServiceError) ReadMany(page int, rowsPerPage int, ctx context.Context) ([]*models.Data, error) {
 	return nil, DataError{Message: "Error reading data."}
 }
 
-func (m *MockDataServiceError) ReadOne(id int, ctx context.Context) (*models.Data, error) {
+func (m *MockDataServiceError) ReadOne(deviceID string, vehicalID string, ctx context.Context) (*models.Data, error) {
 	return nil, DataError{Message: "Error reading data."}
 }
 
@@ -106,7 +124,7 @@ func (m *MockDataServiceError) Update(data *models.Data, ctx context.Context) (i
 	return 0, DataError{Message: "Error updating data."}
 }
 
-func (m *MockDataServiceError) Delete(data *models.Data, ctx context.Context) (int64, error) {
+func (m *MockDataServiceError) Delete(deviceID string, vehicalID string, ctx context.Context) (int64, error) {
 	return 0, DataError{Message: "Error deleting data."}
 }
 
